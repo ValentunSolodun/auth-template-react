@@ -1,4 +1,6 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import {getHome} from "../../actions/home";
 
 const Home = () => {
   return (
@@ -6,4 +8,7 @@ const Home = () => {
   )
 }
 
-export default Home;
+export default connect(null, dispatch => {
+  dispatch(getHome())
+  return {};
+})(Home);

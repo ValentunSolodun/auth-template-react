@@ -19,8 +19,11 @@ function* fetchingRegister({name, email, password}) {
         },
         body: JSON.stringify(objDispatch)
       });
-      let status = response.status;
-      return status;
+      // let status = response.status;
+      return {
+        status: response.status,
+        text: await response.text()
+      }
     } catch (e) {
       // history.push('/login');
       return false;
@@ -28,11 +31,11 @@ function* fetchingRegister({name, email, password}) {
   }
 
   const data = yield call(fetchData);
-  if (data === 200) {
+  if (data.status === 200) {
     history.push('/login');
     yield put({type: 'REGISTER_RESULT', payload: data})
   } else {
-    yield put({type: 'REGISTER_RESULT', payload: data})
+    alert(data.text)
   }
 }
 

@@ -20,19 +20,27 @@ function* fetchingLogin({email, password}) {
         },
         body: JSON.stringify(objDispatch)
       });
-      let status = response.status;
-      return status;
+
+      let data = await response.json();
+
+      return {
+        token: data.token,
+        rows: data.rows,
+        status: response.status,
+      };
+
     } catch (e) {
       return false;
     }
   }
 
   const data = yield call(fetchData);
-  console.log(data);
-  if (data === 200) {
-    cookie.save('token', data, {path: '/'});
+
+  if (data.status === 200) {
+    cookie.save('token', data.token, {path: '/'});
     history.push('/');
-    yield put({type: 'LOGIN_RESULT', payload: data})
+    yield put({type: 'LOGIN_RESULT', payload: data.rows});
+    yield put({type: 'SUCCESSFUL_USER', payload: data.rows});
   } else {
     alert('Error fetch login');
   }

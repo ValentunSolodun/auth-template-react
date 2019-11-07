@@ -41,6 +41,10 @@ app.use('/', (req, res, next) => {
 });
 
 app.get('/custom', (req, res) => {
+  let user = req.user;
+
+  console.log(user);
+
   res.send(200);
 });
 

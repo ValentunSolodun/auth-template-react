@@ -69,14 +69,15 @@ users.post('/login', (req, res) => {
             name: name,
             email: email,
           };
-          return token = jwt.sign(u, config.secret, {
+          return jwt.sign(u, config.secret, {
             expiresIn: 60 * 60 * 24
           });
         }
 
         if (bcrypt.compareSync(userObj.password, rows[0].password)) {
           let token = generateToken(rows[0].id, rows[0].name, rows[0].email);
-          res.send(token);
+          let user = {id: rows[0].id, name: rows[0].name, email: rows[0].email}
+          res.send({token, rows: {...user}});
         } else {
           res.sendStatus(403);
         }
