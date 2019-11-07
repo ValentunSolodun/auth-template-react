@@ -1,0 +1,46 @@
+import {takeEvery, put, call} from 'redux-saga/effects';
+import {history} from '../helpers/history';
+import cookie from 'react-cookies';
+
+
+function* fetchingLogin({email, password}) {
+
+  let objDispatch = {
+    email: email,
+    password: password
+  }
+
+  let fetchData = async () => {
+
+    try {
+      const response = await fetch('http://localhost:3001/users/login', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(objDispatch)
+      });
+      let status = response.status;
+      return status;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  const data = yield call(fetchData);
+  console.log(data);
+  if (data === 200) {
+    cookie.save('token', data, {path: '/'});
+    history.push('/');
+    yield put({type: 'LOGIN_RESULT', payload: data})
+  } else {
+    alert('Error fetch login');
+  }
+
+}
+
+function* loginSend() {
+  yield takeEvery('LOGIN_SEND', fetchingLogin);
+}
+
+export default loginSend;
